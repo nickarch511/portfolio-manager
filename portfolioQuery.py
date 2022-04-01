@@ -20,7 +20,7 @@ class Portfolio:
         self.stocks = []
 
         for stock in stock_list:
-            ticker = yt.Ticker(stock)
+            ticker = yf.Ticker(stock)
             
             # Determine whether is it a valid ticker
             try:
@@ -32,7 +32,7 @@ class Portfolio:
     
     def add_stocks(self, stock_list):
         for stock in stock_list:
-            ticker = yt.Ticker(stock)
+            ticker = yf.Ticker(stock)
             
             # Determine whether is it a valid ticker
             try:
