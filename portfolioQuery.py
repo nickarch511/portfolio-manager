@@ -57,4 +57,4 @@ class Portfolio:
 
     # Add string method
     def __str__(self):
-        return " ".join(self.stocks)[:-1]
+        return " ".join(self.stocks)
