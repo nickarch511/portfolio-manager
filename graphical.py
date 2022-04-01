@@ -2,12 +2,13 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel, QPushButton
 from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QRadioButton, QButtonGroup, QGroupBox
-
+from portfolioQuery import Portfolio
 
 class Gui(QWidget):
     def __init__(self):
         super().__init__()
         self.drawGui()
+        self.portfolio = None
 
     def drawGui(self):
         self.setWindowTitle("Portfolio Manager")
@@ -87,6 +88,7 @@ class Gui(QWidget):
         assets = text.split(",")
         self.assetListLbl.setText(self.assetListLbl.text() + " "  + " ".join(assets))
         self.assetLineEdit.setText("")
+        self.portfolio = Portfolio(assets)
 
 def main():
     app = QApplication(sys.argv)
