@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, Q
 class Gui(QWidget):
     def __init__(self):
         super().__init__()
-
         self.drawGui()
 
     def drawGui(self):
@@ -15,60 +14,71 @@ class Gui(QWidget):
         centerpoint = QDesktopWidget().availableGeometry().center()
         self.setGeometry(centerpoint.x()/4,centerpoint.y()/2,1000,500)
         layout = QHBoxLayout()
-        leftVertLayout = QVBoxLayout()
-        rightVertLayout = QVBoxLayout()
-        leftHAddLayout = QHBoxLayout()
-        leftHAmountLayout = QHBoxLayout()
+        self.leftVertLayout = QVBoxLayout()
+        self.rightVertLayout = QVBoxLayout()
+        self.leftHAddLayout = QHBoxLayout()
+        self.leftHAmountLayout = QHBoxLayout()
 
-        addBtn = QPushButton("Add")
-        assetLineEdit = QLineEdit()
-        assetLineEdit.setPlaceholderText("Enter comma-delineated assets of form: APPL, AMD, ...")
+        self.addBtn = QPushButton("Add")
+        self.assetLineEdit = QLineEdit()
+        self.assetLineEdit.setPlaceholderText("Enter comma-delineated assets of form: APPL, AMD, ...")
     
-        unlimitedRadioBtn = QRadioButton("Unlimited")
-        limitedRadioBtn = QRadioButton("Limited")
-        longRadioBtn = QRadioButton("Long")
-        computePortfolioBtn = QPushButton("Compute Portfolio") # Included in bottom-right
+        self.unlimitedRadioBtn = QRadioButton("Unlimited")
+        self.limitedRadioBtn = QRadioButton("Limited")
+        self.longRadioBtn = QRadioButton("Long")
+        self.computePortfolioBtn = QPushButton("Compute Portfolio") # Included in bottom-right
 
-        amountLbl = QLineEdit("Amount")
-        amountLbl.setReadOnly(True)
-        amountInputLbl = QLineEdit()
-        amountInputLbl.setPlaceholderText("Enter amount here")
-        amountLbl.setMaximumWidth(75)
-        numAssetsLbl = QLineEdit("X Total Assets") # Included in top-right
-        numAssetsLbl.setReadOnly(True)
-        assetListLbl = QLineEdit("Assets will appear here when added") # Included in top-right
-        assetListLbl.setReadOnly(True) 
+        self.amountLbl = QLineEdit("Amount")
+        self.amountLbl.setReadOnly(True)
+        self.amountInputLbl = QLineEdit()
+        self.amountInputLbl.setPlaceholderText("Enter amount here")
+        self.amountLbl.setMaximumWidth(75)
+        self.numAssetsLbl = QLineEdit("X Total Assets") # Included in top-right
+        self.numAssetsLbl.setReadOnly(True)
+        self.assetListLbl = QLineEdit("Assets will appear here when added") # Included in top-right
+        self.assetListLbl.setReadOnly(True) 
 
 
-        leftHAmountLayout.addWidget(amountLbl)
-        leftHAmountLayout.addWidget(amountInputLbl)
+        self.leftHAmountLayout.addWidget(self.amountLbl)
+        self.leftHAmountLayout.addWidget(self.amountInputLbl)
 
-        leftHAddLayout.addWidget(assetLineEdit)
-        leftHAddLayout.addWidget(addBtn)
+        self.leftHAddLayout.addWidget(self.assetLineEdit)
+        self.leftHAddLayout.addWidget(self.addBtn)
 
         # Make the left side of screen
-        leftVertLayout.addLayout(leftHAddLayout)
-        leftVertLayout.addWidget(unlimitedRadioBtn)
-        leftVertLayout.addWidget(limitedRadioBtn)
-        leftVertLayout.addWidget(longRadioBtn)
-        leftVertLayout.addLayout(leftHAmountLayout)
-        leftVertLayout.addStretch(1)
+        self.leftVertLayout.addLayout(self.leftHAddLayout)
+        self.leftVertLayout.addWidget(self.unlimitedRadioBtn)
+        self.leftVertLayout.addWidget(self.limitedRadioBtn)
+        self.leftVertLayout.addWidget(self.longRadioBtn)
+        self.leftVertLayout.addLayout(self.leftHAmountLayout)
+        self.leftVertLayout.addStretch(1)
         
         # Make the right side of screen
-        rightVertLayout.addWidget(numAssetsLbl)
-        rightVertLayout.addWidget(assetListLbl)
-        rightVertLayout.addWidget(computePortfolioBtn)
-        rightVertLayout.addStretch(1)
+        self.rightVertLayout.addWidget(self.numAssetsLbl)
+        self.rightVertLayout.addWidget(self.assetListLbl)
+        self.rightVertLayout.addWidget(self.computePortfolioBtn)
+        self.rightVertLayout.addStretch(1)
 
         # Add the left and right sides of screen to the layout
-        layout.addLayout(leftVertLayout)
-        layout.addLayout(rightVertLayout)
+        layout.addLayout(self.leftVertLayout)
+        layout.addLayout(self.rightVertLayout)
         
         # set the layout
         self.setLayout(layout)
 
+        # Set up action listeners for buttons and other widgets
+        self.computePortfolioBtn.clicked.connect(self.portfolioBtnClicked)
+
         self.show()
 
+    def portfolioBtnClicked(self):
+        # Get the toggled radio button:
+        if self.unlimitedRadioBtn.isChecked():
+            print("Unlimited clicked")
+        elif self.limitedRadioBtn.isChecked():
+            print("Limited Clicked")
+        elif self.longRadioBtn.isChecked():
+            print("Long is clicked")
 
 def main():
     app = QApplication(sys.argv)
