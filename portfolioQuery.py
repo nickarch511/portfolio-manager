@@ -25,7 +25,9 @@ class Portfolio:
             # Determine whether is it a valid ticker
             try:
                 info = ticker.info # If this runs, it is valid
-                self.stocks.append(stock)
+                if not info['regularMarketPrice'] == None:
+                    self.stocks.append(stock)
+                    self.num_stocks += 1
             except: 
                 continue # invalid
         self.num_stocks = len(self.stocks)
@@ -37,8 +39,9 @@ class Portfolio:
             # Determine whether is it a valid ticker
             try:
                 info = ticker.info # If this runs, it is valid
-                self.stocks.append(stock)
-                self.num_stocks += 1
+                if not info['regularMarketPrice'] == None:
+                    self.stocks.append(stock)
+                    self.num_stocks += 1
             except: 
                 continue # invalid
         
