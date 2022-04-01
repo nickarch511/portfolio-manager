@@ -87,7 +87,9 @@ class Gui(QWidget):
         text = self.assetLineEdit.text()
         assets = text.split(",")
         self.assetLineEdit.setText("")
-        self.portfolio = Portfolio(assets)
+        if self.portfolio is None:
+            self.portfolio = Portfolio(assets)
+        else: self.portfolio.add_stocks(assets)
         self.assetListLbl.setText(str(self.portfolio))
 
 def main():
