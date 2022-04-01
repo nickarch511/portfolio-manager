@@ -85,9 +85,8 @@ class Gui(QWidget):
     def addBtnClicked(self):
         text = self.assetLineEdit.text()
         assets = text.split(",")
-        print("Assets is {}".format(assets))
         self.assetListLbl.setText(self.assetListLbl.text() + " "  + " ".join(assets))
-
+        self.assetLineEdit.setText("")
 
 def main():
     app = QApplication(sys.argv)
