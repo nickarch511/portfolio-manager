@@ -54,3 +54,7 @@ class Portfolio:
 
     def getLimitedLeveragePortfolio(self):
         return [0 for i in range(self.num_stocks)]
+
+    # Add string method
+    def __str__(self):
+        return self.stocks.join(", ")[:-1]
