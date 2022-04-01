@@ -35,7 +35,8 @@ class Gui(QWidget):
         self.amountLbl.setMaximumWidth(75)
         self.numAssetsLbl = QLineEdit("X Total Assets") # Included in top-right
         self.numAssetsLbl.setReadOnly(True)
-        self.assetListLbl = QLineEdit("Assets will appear here when added") # Included in top-right
+        self.assetListLbl = QLineEdit() # Included in top-right
+        self.assetListLbl.setPlaceholderText("Assets will appear here when added")
         self.assetListLbl.setReadOnly(True) 
 
 
@@ -68,6 +69,7 @@ class Gui(QWidget):
 
         # Set up action listeners for buttons and other widgets
         self.computePortfolioBtn.clicked.connect(self.portfolioBtnClicked)
+        self.addBtn.clicked.connect(self.addBtnClicked)
 
         self.show()
 
@@ -79,6 +81,13 @@ class Gui(QWidget):
             print("Limited Clicked")
         elif self.longRadioBtn.isChecked():
             print("Long is clicked")
+
+    def addBtnClicked(self):
+        text = self.assetLineEdit.text()
+        assets = text.split(",")
+        print("Assets is {}".format(assets))
+        self.assetListLbl.setText(self.assetListLbl.text() + " "  + " ".join(assets))
+
 
 def main():
     app = QApplication(sys.argv)
