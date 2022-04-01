@@ -42,7 +42,7 @@ class Portfolio:
             except: 
                 continue # invalid
         
-    def clear_stocks(self, stock_list):
+    def clear_stocks(self):
         self.stocks = []
         self.num_stocks = 0
 
@@ -57,4 +57,4 @@ class Portfolio:
 
     # Add string method
     def __str__(self):
-        return self.stocks.join(", ")[:-1]
+        return " ".join(self.stocks)[:-1]
