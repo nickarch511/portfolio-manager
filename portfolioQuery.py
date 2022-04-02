@@ -26,7 +26,7 @@ class Portfolio:
             try:
                 info = ticker.info # If this runs, it is valid
                 if not info['regularMarketPrice'] == None:
-                    self.stocks.append(stock)
+                    self.stocks.append(stock.upper().strip())
                     self.num_stocks += 1
             except: 
                 continue # invalid
@@ -40,7 +40,7 @@ class Portfolio:
             try:
                 info = ticker.info # If this runs, it is valid
                 if not info['regularMarketPrice'] == None:
-                    self.stocks.append(stock)
+                    self.stocks.append(stock.upper().strip())
                     self.num_stocks += 1
             except: 
                 continue # invalid
