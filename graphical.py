@@ -77,7 +77,9 @@ class Gui(QWidget):
     def portfolioBtnClicked(self):
         # Get the toggled radio button:
         if self.unlimitedRadioBtn.isChecked():
-            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
+            if not self.portfolio is None: 
+                self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
+                self.portfolio.getTangentPortfolio()
         elif self.limitedRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
         elif self.longRadioBtn.isChecked():
