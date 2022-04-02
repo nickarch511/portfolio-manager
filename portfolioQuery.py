@@ -1,5 +1,5 @@
 import financeMethods as fm
-import datetime
+from datetime import datetime
 from datetime import timedelta
 import numpy as np
 import pandas as pd
@@ -62,10 +62,12 @@ class Portfolio:
 
     def getTangentPortfolio(self):
         a_year = timedelta(days=365)
-        today = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
+        today = datetime.strftime(datetime.today(), "%Y-%m-%d")
+        last_year = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
         assets = list(self.stocks)
-        data = yf.download(" ".join(assets), start=today - a_year, end=today)
+        data = yf.download(" ".join(assets), start=last_year, end=today)
         asset_data = {}
+        print(data)
         for name in assets:
             x = pd.DataFrame(data.xs(name,axis=1, level=1))
             x["Date"] = x.index
@@ -75,7 +77,7 @@ class Portfolio:
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
         for i, name in zip(fm.calculateFST(V,M, .0000459), assets):
-            print("{}: {}".format(name,i*50000))
+            print("{}: {}".format(name,i*self.amount))
 
         return [0 for i in range(self.num_stocks)]
 
