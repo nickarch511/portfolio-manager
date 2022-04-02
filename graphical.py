@@ -92,6 +92,9 @@ class Gui(QWidget):
         else: self.portfolio.add_stocks(assets)
         self.assetListLbl.setText(str(self.portfolio))
 
+        # Edit label to reflect number of stocks
+        self.numAssetsLbl.setText(str(self.portfolio.num_stocks) + " Total Assets")
+
 def main():
     app = QApplication(sys.argv)
     gui = Gui()
