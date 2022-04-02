@@ -17,7 +17,7 @@ class Portfolio:
     # Constructor
     def __init__(self, stock_list):
         
-        self.stocks = []
+        self.stocks = set()
 
         for stock in stock_list:
             ticker = yf.Ticker(stock)
@@ -26,7 +26,7 @@ class Portfolio:
             try:
                 info = ticker.info # If this runs, it is valid
                 if not info['regularMarketPrice'] == None:
-                    self.stocks.append(stock.upper().strip())
+                    self.stocks.add(stock.upper().strip())
                     self.num_stocks += 1
             except: 
                 continue # invalid
@@ -40,13 +40,13 @@ class Portfolio:
             try:
                 info = ticker.info # If this runs, it is valid
                 if not info['regularMarketPrice'] == None:
-                    self.stocks.append(stock.upper().strip())
+                    self.stocks.add(stock.upper().strip())
                     self.num_stocks += 1
             except: 
                 continue # invalid
         
     def clear_stocks(self):
-        self.stocks = []
+        self.stocks = set()
         self.num_stocks = 0
 
     def getTangentPortfolio(self):
