@@ -83,7 +83,15 @@ class Gui(QWidget):
         elif self.longRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
 
-        print(self.portfolio.portfolioType)
+        if not self.portfolio is None:
+            print("The portfolio type is {}".format(self.portfolio.portfolioType))
+            # get amount from amountInputLbl
+            try:
+                text = "".join(filter(str.isalnum, self.amountInputLbl.text()))
+                self.portfolio.amount = float(text)
+                print("The amount is {}".format(self.portfolio.amount))
+            except:
+                print("Error occurred. Enter amount without any special characters.")
 
     def addBtnClicked(self):
         text = self.assetLineEdit.text()
