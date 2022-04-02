@@ -13,7 +13,7 @@ class Gui(QWidget):
     def drawGui(self):
         self.setWindowTitle("Portfolio Manager")
         centerpoint = QDesktopWidget().availableGeometry().center()
-        self.setGeometry(centerpoint.x()/4,centerpoint.y()/2,1000,500)
+        self.setGeometry(int(centerpoint.x()/4),int(centerpoint.y()/2),1000,500)
         layout = QHBoxLayout()
         self.leftVertLayout = QVBoxLayout()
         self.rightVertLayout = QVBoxLayout()
@@ -77,11 +77,13 @@ class Gui(QWidget):
     def portfolioBtnClicked(self):
         # Get the toggled radio button:
         if self.unlimitedRadioBtn.isChecked():
-            print("Unlimited clicked")
+            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
         elif self.limitedRadioBtn.isChecked():
-            print("Limited Clicked")
+            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
         elif self.longRadioBtn.isChecked():
-            print("Long is clicked")
+            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
+
+        print(self.portfolio.portfolioType)
 
     def addBtnClicked(self):
         text = self.assetLineEdit.text()
