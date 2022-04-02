@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
+
 """
 This class will control a given stock portfolio.
 It will contain two instance variables, self.stocks and self.numstocks
@@ -14,10 +15,17 @@ be added to the Portfolio object's stock_list or num_stocks instance variables.
 """
 class Portfolio:
 
+    # define symbolic constants
+    LONG_PORTFOLIO = 0
+    LIMITED_PORTFOLIO = 1
+    UNLIMITED_PORTFOLIO = 2
+
     # Constructor
-    def __init__(self, stock_list):
+    def __init__(self, stock_list, type=LONG_PORTFOLIO, amount=1):
         
         self.stocks = set()
+        self.portfolioType = type
+        self.amount = amount
 
         for stock in stock_list:
             ticker = yf.Ticker(stock)
@@ -61,3 +69,5 @@ class Portfolio:
     # Add string method
     def __str__(self):
         return " ".join(self.stocks)
+
+
