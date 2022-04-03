@@ -4,6 +4,17 @@ from PyQt5.QtWidgets import QLabel, QPushButton
 from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QRadioButton, QButtonGroup, QGroupBox
 from portfolioQuery import Portfolio
 
+'''
+This file contains the class and main function that runs the Graphical User 
+Interface (GUI). This GUI uses the PyQt5 module and connects with the Portfolio
+class through an instance variable defined as self.portfolio in the __init__ method
+of the Gui class.
+
+This class also deals with the interactive side of things (i.e. what happens when
+a user clicks the add button, etc.) 
+
+'''
+
 class Gui(QWidget):
     def __init__(self):
         super().__init__()
@@ -75,16 +86,7 @@ class Gui(QWidget):
         self.show()
 
     def portfolioBtnClicked(self):
-        # Get the toggled radio button:
-        if self.unlimitedRadioBtn.isChecked():
-            if not self.portfolio is None: 
-                self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
-                self.portfolio.getTangentPortfolio()
-        elif self.limitedRadioBtn.isChecked():
-            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
-        elif self.longRadioBtn.isChecked():
-            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
-
+        # First get the amount
         if not self.portfolio is None:
             print("The portfolio type is {}".format(self.portfolio.portfolioType))
             # get amount from amountInputLbl
@@ -94,6 +96,18 @@ class Gui(QWidget):
                 print("The amount is {}".format(self.portfolio.amount))
             except:
                 print("Error occurred. Enter amount without any special characters.")
+
+        # Get the toggled radio button and calculate corresponding portfolio
+        if self.unlimitedRadioBtn.isChecked():
+            if not self.portfolio is None: 
+                self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
+                self.portfolio.getTangentPortfolio()
+        elif self.limitedRadioBtn.isChecked():
+            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
+        elif self.longRadioBtn.isChecked():
+            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
+
+        
 
     def addBtnClicked(self):
         text = self.assetLineEdit.text()
