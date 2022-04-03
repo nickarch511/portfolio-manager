@@ -80,16 +80,11 @@ class Portfolio:
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
         fst = fm.calculateFST(V,M, .0000459)
+        string = ""
         for i, name in zip(fst, assets):
-            print("{}: {}".format(name,i*self.amount))
+            s += "{}: {}".format(name,i*self.amount)
 
-        data_disp = pd.DataFrame(np.dot(fst, self.amount), index=assets, columns=["Allocations"])
-        print(data_disp)
-
-        x = dfi.export(data_disp.T, './dataframe.png')
-        print(x)
-
-        return [0 for i in range(self.num_stocks)]
+        return s
 
     def getLongPortfolio(self):
         return [0 for i in range(self.num_stocks)]
