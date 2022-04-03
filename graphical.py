@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QLabel, QPushButton
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QRadioButton, QButtonGroup, QGroupBox
+from PyQt5.QtWidgets import QLabel, QPushButton, QLineEdit, QRadioButton
+from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout
+from PyQt5.QtGui import QPixmap
 from portfolioQuery import Portfolio
 
 '''
@@ -16,6 +17,9 @@ a user clicks the add button, etc.)
 '''
 
 class Gui(QWidget):
+    HEIGHT = 500
+    WIDTH = 1000
+
     def __init__(self):
         super().__init__()
         self.drawGui()
@@ -24,8 +28,9 @@ class Gui(QWidget):
     def drawGui(self):
         self.setWindowTitle("Portfolio Manager")
         centerpoint = QDesktopWidget().availableGeometry().center()
-        self.setGeometry(int(centerpoint.x()/4),int(centerpoint.y()/2),1000,500)
-        layout = QHBoxLayout()
+        self.setGeometry(int(centerpoint.x()/4),int(centerpoint.y()/2),self.WIDTH,self.HEIGHT)
+        self.layout = QVBoxLayout()
+        self.inner_layout = QHBoxLayout()
         self.leftVertLayout = QVBoxLayout()
         self.rightVertLayout = QVBoxLayout()
         self.leftHAddLayout = QHBoxLayout()
@@ -73,11 +78,21 @@ class Gui(QWidget):
         self.rightVertLayout.addStretch(1)
 
         # Add the left and right sides of screen to the layout
-        layout.addLayout(self.leftVertLayout)
-        layout.addLayout(self.rightVertLayout)
+        self.inner_layout.addLayout(self.leftVertLayout)
+        self.inner_layout.addLayout(self.rightVertLayout)
+        
+        # Add inner horizontal layout to outer vertical layout
+        self.layout.addLayout(self.inner_layout)
+        
+        # Add image to layout
+        self.im = QPixmap("./dataframe.png")
+        self.imlabel = QLabel()
+        self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
+        self.layout.addWidget(self.imlabel)
+
         
         # set the layout
-        self.setLayout(layout)
+        self.setLayout(self.layout)
 
         # Set up action listeners for buttons and other widgets
         self.computePortfolioBtn.clicked.connect(self.portfolioBtnClicked)
@@ -107,6 +122,10 @@ class Gui(QWidget):
         elif self.longRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
 
+        self.im = QPixmap("./dataframe.png")
+        self.imlabel = QLabel()
+        self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
+        self.layout.addWidget(self.imlabel)
         
 
     def addBtnClicked(self):
