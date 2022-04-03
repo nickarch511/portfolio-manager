@@ -86,8 +86,8 @@ class Portfolio:
         data_disp = pd.DataFrame(np.dot(fst, self.amount), index=assets, columns=["Allocations"])
         print(data_disp)
 
-        dfi.export(data_disp.T, './dataframe.png')
-
+        x = dfi.export(data_disp.T, './dataframe.png')
+        print(x)
 
         return [0 for i in range(self.num_stocks)]
 
