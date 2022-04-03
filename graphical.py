@@ -122,10 +122,12 @@ class Gui(QWidget):
         elif self.longRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
 
+        self.layout.removeWidget(self.imlabel)
         self.im = QPixmap("./dataframe.png")
         self.imlabel = QLabel()
         self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
         self.layout.addWidget(self.imlabel)
+        
         
 
     def addBtnClicked(self):
