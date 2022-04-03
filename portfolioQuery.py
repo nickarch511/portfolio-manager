@@ -1,9 +1,12 @@
 import financeMethods as fm
 from datetime import datetime
 from datetime import timedelta
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import yfinance as yf
+import dataframe_image as dfi
+
 
 
 """
@@ -76,8 +79,15 @@ class Portfolio:
         M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
-        for i, name in zip(fm.calculateFST(V,M, .0000459), assets):
+        fst = fm.calculateFST(V,M, .0000459)
+        for i, name in zip(fst, assets):
             print("{}: {}".format(name,i*self.amount))
+
+        data_disp = pd.DataFrame(np.dot(fst, self.amount), index=assets, columns=["Allocations"])
+        print(data_disp)
+
+        dfi.export(data_disp.T, './dataframe.png')
+
 
         return [0 for i in range(self.num_stocks)]
 
