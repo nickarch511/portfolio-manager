@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel, QPushButton, QLineEdit, QRadioButton
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QPlainTextEdit
 from PyQt5.QtGui import QPixmap
 from portfolioQuery import Portfolio
 
@@ -84,11 +84,11 @@ class Gui(QWidget):
         # Add inner horizontal layout to outer vertical layout
         self.layout.addLayout(self.inner_layout)
         
-        # Add image to layout
-        self.im = QPixmap("./dataframe.png")
-        self.imlabel = QLabel()
-        self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
-        self.layout.addWidget(self.imlabel)
+        # Add output box to layout
+        self.output = QPlainTextEdit("")
+        self.output.setReadOnly(True)
+        self.output.setPlaceholderText("Portfolio allocations will appear here.")
+        self.layout.addWidget(self.output)
 
         
         # set the layout
@@ -113,20 +113,23 @@ class Gui(QWidget):
                 print("Error occurred. Enter amount without any special characters.")
 
         # Get the toggled radio button and calculate corresponding portfolio
+        result = ""
         if self.unlimitedRadioBtn.isChecked():
             if not self.portfolio is None: 
                 self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
-                self.portfolio.getTangentPortfolio()
+                result = self.portfolio.getTangentPortfolio()
         elif self.limitedRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
         elif self.longRadioBtn.isChecked():
             if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
 
-        self.layout.removeWidget(self.imlabel)
-        self.im = QPixmap("./dataframe.png")
-        self.imlabel = QLabel()
-        self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
-        self.layout.addWidget(self.imlabel)
+        # self.layout.removeWidget(self.imlabel)
+        # self.im = QPixmap("./dataframe.png")
+        # self.imlabel = QLabel()
+        # self.imlabel.setPixmap(self.im.scaledToWidth(self.WIDTH))
+        # self.layout.addWidget(self.imlabel)
+
+        self.output.document().setPlainText(str(result))
         
         
 
