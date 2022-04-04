@@ -88,10 +88,53 @@ class Portfolio:
         return string
 
     def getLongPortfolio(self):
-        return [0 for i in range(self.num_stocks)]
+        a_year = timedelta(days=365)
+        today = datetime.strftime(datetime.today(), "%Y-%m-%d")
+        last_year = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
+        assets = list(self.stocks)
+        data = yf.download(" ".join(assets), start=last_year, end=today)
+        asset_data = {}
+        print(data)
+        for name in assets:
+            x = pd.DataFrame(data.xs(name,axis=1, level=1))
+            x["Date"] = x.index
+            asset_data[name] = fm.getDailyReturnsDataFrame(x)
+        
+        M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
+        V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
+        
+        flt = fm.getFlt(V,M, .0000459)['Flt']
+        string = ""
+        for i, name in zip(flt, assets):
+            allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
+            string += "{}: {}".format(name,allocation_string) + '\n'
 
+        return string
+
+    # This function with take a decimal argument p, the maximal percentage of portfolio held in short
     def getLimitedLeveragePortfolio(self):
-        return [0 for i in range(self.num_stocks)]
+        a_year = timedelta(days=365)
+        today = datetime.strftime(datetime.today(), "%Y-%m-%d")
+        last_year = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
+        assets = list(self.stocks)
+        data = yf.download(" ".join(assets), start=last_year, end=today)
+        asset_data = {}
+        print(data)
+        for name in assets:
+            x = pd.DataFrame(data.xs(name,axis=1, level=1))
+            x["Date"] = x.index
+            asset_data[name] = fm.getDailyReturnsDataFrame(x)
+        
+        M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
+        V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
+        
+        fst = fm.calculateFST(V,M, .0000459)
+        string = ""
+        for i, name in zip(fst, assets):
+            allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
+            string += "{}: {}".format(name,allocation_string) + '\n'
+
+        return string
 
     # Add string method
     def __str__(self):
