@@ -82,7 +82,8 @@ class Portfolio:
         fst = fm.calculateFST(V,M, .0000459)
         string = ""
         for i, name in zip(fst, assets):
-            string += "{}: {}".format(name,i*self.amount)
+            allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
+            string += "{}: {}".format(name,allocation_string) + '\n'
 
         return string
 
