@@ -41,7 +41,6 @@ class Gui(QWidget):
         self.assetLineEdit.setPlaceholderText("Enter comma-delineated assets of form: APPL, AMD, ...")
     
         self.unlimitedRadioBtn = QRadioButton("Unlimited")
-        self.limitedRadioBtn = QRadioButton("Limited")
         self.longRadioBtn = QRadioButton("Long")
         self.computePortfolioBtn = QPushButton("Compute Portfolio") # Included in bottom-right
 
@@ -66,7 +65,6 @@ class Gui(QWidget):
         # Make the left side of screen
         self.leftVertLayout.addLayout(self.leftHAddLayout)
         self.leftVertLayout.addWidget(self.unlimitedRadioBtn)
-        self.leftVertLayout.addWidget(self.limitedRadioBtn)
         self.leftVertLayout.addWidget(self.longRadioBtn)
         self.leftVertLayout.addLayout(self.leftHAmountLayout)
         self.leftVertLayout.addStretch(1)
@@ -117,13 +115,17 @@ class Gui(QWidget):
         if self.unlimitedRadioBtn.isChecked():
             if not self.portfolio is None: 
                 self.portfolio.portfolioType = Portfolio.UNLIMITED_PORTFOLIO
-                result = self.portfolio.getTangentPortfolio()
-        elif self.limitedRadioBtn.isChecked():
-            if not self.portfolio is None: self.portfolio.portfolioType = Portfolio.LIMITED_PORTFOLIO
+                if self.portfolio.num_stocks > 1:
+                    result = self.portfolio.getTangentPortfolio()
+                else:
+                    result = "Error. The number of stocks added is less than 2."
         elif self.longRadioBtn.isChecked():
             if not self.portfolio is None: 
                 self.portfolio.portfolioType = Portfolio.LONG_PORTFOLIO
-                result = self.portfolio.getLongPortfolio()
+                if self.portfolio.num_stocks > 1:
+                    result = self.portfolio.getLongPortfolio()
+                else:
+                    result = "Error. The number of stocks added is less than 2."
 
         self.output.document().setPlainText(str(result))
         
