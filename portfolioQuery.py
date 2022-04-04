@@ -82,9 +82,9 @@ class Portfolio:
         fst = fm.calculateFST(V,M, .0000459)
         string = ""
         for i, name in zip(fst, assets):
-            s += "{}: {}".format(name,i*self.amount)
+            string += "{}: {}".format(name,i*self.amount)
 
-        return s
+        return string
 
     def getLongPortfolio(self):
         return [0 for i in range(self.num_stocks)]
