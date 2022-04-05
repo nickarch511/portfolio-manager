@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import dataframe_image as dfi
+import requests
+from bs4 import BeautifulSoup
 
 
 
@@ -79,7 +81,7 @@ class Portfolio:
         M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
-        fst = fm.calculateFST(V,M, .0000459)
+        fst = fm.calculateFST(V,M, self.get_si_rate())
         string = ""
         for i, name in zip(fst, assets):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
@@ -103,7 +105,7 @@ class Portfolio:
         M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
-        flt = fm.getFlt(V,M, .0000459)['Flt']
+        flt = fm.getFlt(V,M, self.get_si_rate())['Flt'][0]
         string = ""
         for i, name in zip(flt, assets):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
@@ -128,13 +130,36 @@ class Portfolio:
         M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
         V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
         
-        fst = fm.calculateFST(V,M, .0000459)
+        fst = fm.calculateFST(V,M, self.get_si_rate())
         string = ""
         for i, name in zip(fst, assets):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
             string += "{}: {}".format(name,allocation_string) + '\n'
 
         return string
+
+    def get_si_rate(self):
+        date = datetime.strftime(datetime.today(), "%Y%m")
+        page = requests.get('https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_bill_rates&field_tdr_date_value_month='+date)
+        soup = BeautifulSoup(page.text, 'html.parser')
+        res = [s.strip(' ') for s in soup.find_all('table')[0].get_text().split('\n')]
+        res = [s for s in res if not s == 'N/A' and not s == ''][-1]
+        res = float(res)/100
+        
+        a_year = timedelta(days=365)
+        today = datetime.strftime(datetime.today(), "%Y-%m-%d")
+        last_year = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
+        assets = list(self.stocks)
+        data = yf.download(" ".join(assets), start=last_year, end=today)
+        asset_data = {}
+        print(data)
+        for name in assets:
+            x = pd.DataFrame(data.xs(name,axis=1, level=1))
+            x["Date"] = x.index
+            asset_data[name] = fm.getDailyReturnsDataFrame(x)
+
+        res = (1+res)**(1/fm.getTradingDays(asset_data, assets, last_year,today)) - 1
+        return res
 
     # Add string method
     def __str__(self):
