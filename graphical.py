@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel, QPushButton, QLineEdit, QRadioButton
 from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QPlainTextEdit
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 from portfolioQuery import Portfolio
 
 '''
@@ -55,7 +55,6 @@ class Gui(QWidget):
         self.assetListLbl.setPlaceholderText("Assets will appear here when added")
         self.assetListLbl.setReadOnly(True) 
 
-
         self.leftHAmountLayout.addWidget(self.amountLbl)
         self.leftHAmountLayout.addWidget(self.amountInputLbl)
 
@@ -86,7 +85,9 @@ class Gui(QWidget):
         self.output = QPlainTextEdit("")
         self.output.setReadOnly(True)
         self.output.setPlaceholderText("Portfolio allocations will appear here.")
+        self.output.setFont(QFont("Arial", 25))
         self.layout.addWidget(self.output)
+
 
         
         # set the layout
