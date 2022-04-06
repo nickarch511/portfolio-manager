@@ -87,6 +87,9 @@ class Portfolio:
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
             string += "{}: {}".format(name,allocation_string) + '\n'
 
+        # Graph the frontier
+        self.graphFrontier(fst)
+
         return string
 
     def getLongPortfolio(self):
@@ -110,6 +113,9 @@ class Portfolio:
         for i, name in zip(flt, assets):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
             string += "{}: {}".format(name,allocation_string) + '\n'
+        
+        # Graph the frontier
+        self.graphFrontier(flt)
 
         return string
 
@@ -160,6 +166,53 @@ class Portfolio:
 
         res = (1+res)**(1/fm.getTradingDays(asset_data, assets, last_year,today)) - 1
         return res
+
+    def graphFrontier(self, portfolio):
+        # Get asset data
+        date = datetime.strftime(datetime.today(), "%Y%m")
+        page = requests.get('https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_bill_rates&field_tdr_date_value_month='+date)
+        soup = BeautifulSoup(page.text, 'html.parser')
+        res = [s.strip(' ') for s in soup.find_all('table')[0].get_text().split('\n')]
+        res = [s for s in res if not s == 'N/A' and not s == ''][-1]
+        res = float(res)/100
+        
+        a_year = timedelta(days=365)
+        today = datetime.strftime(datetime.today(), "%Y-%m-%d")
+        last_year = datetime.strftime(datetime.today() - a_year, "%Y-%m-%d")
+        assets = list(self.stocks)
+        data = yf.download(" ".join(assets), start=last_year, end=today)
+        asset_data = {}
+        print(data)
+        for name in assets:
+            x = pd.DataFrame(data.xs(name,axis=1, level=1))
+            x["Date"] = x.index
+            asset_data[name] = fm.getDailyReturnsDataFrame(x)
+        
+        # Get Return mean vector and covariance matrix
+        M = fm.getM(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))
+        V = fm.getV(asset_data, assets, datetime.strftime(datetime.today() - a_year, "%Y-%m-%d"), datetime.strftime(datetime.today(), "%Y-%m-%d"))    
+
+        rm = fm.getReturnMeanForTwoRatePortfolio(fm.calculateFmv(V,M),M)
+        rv = fm.getReturnVolatilityForTwoRatePortfolio(fm.calculateFmv(V,M),V)
+
+        rmPortfolio = fm.getReturnMeanForTwoRatePortfolio(portfolio,M)
+        rvPortfolio = fm.getReturnVolatilityForTwoRatePortfolio(portfolio,V)
+
+        # Plot frontier
+        plt.figure(figsize=(14,14))
+        mu = np.arange(-2*abs(rmPortfolio),2*abs(rmPortfolio),.000001)
+        sigma = [fm.calculateMarkowitzFrontier(V,M,i) for i in mu]
+
+        plt.plot(sigma,mu)
+        plt.scatter(rv,rm,s=100)    
+        plt.text(rv, rm, "MV", fontsize=12)        
+        print("rv is {} and rm is {}".format(rvPortfolio,rmPortfolio))
+        plt.scatter(rvPortfolio,rmPortfolio,s=100)    
+        plt.text(rvPortfolio, rmPortfolio, "Your Portfolio", fontsize=12)   
+
+        plt.show()
+
+
 
     # Add string method
     def __str__(self):
