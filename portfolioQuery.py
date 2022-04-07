@@ -256,7 +256,7 @@ class Portfolio:
         bestRewardToReturnRatio = 0
 
         self.num_stocks = numAssets
-        for _ in range(3):
+        for _ in range(1000):
             self.stocks = random.sample(x,numAssets)
             flt,names = self.getLongPortfolioGivenAssetStringAndRf(self.stocks, self.get_si_rate(), 1)
             if flt['mu']/flt['sigma'] > bestRewardToReturnRatio:
