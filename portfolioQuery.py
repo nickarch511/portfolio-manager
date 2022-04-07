@@ -268,8 +268,8 @@ class Portfolio:
         self.stocks = bestNames
 
         # Graph the frontier
-        self.graphFrontier(bestflt)
-
+        self.graphFrontier(bestflt['Flt'][0])
+        bestflt = bestflt['Flt'][0]
         string = ""
         for i, name in zip(bestflt, assets):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
