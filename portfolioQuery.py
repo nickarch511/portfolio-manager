@@ -256,7 +256,7 @@ class Portfolio:
         bestRewardToReturnRatio = 0
 
         self.num_stocks = numAssets
-        for _ in range(100):
+        for _ in range(3):
             self.stocks = random.sample(x,numAssets)
             flt,names = self.getLongPortfolioGivenAssetStringAndRf(self.stocks, self.get_si_rate(), 1)
             if flt['mu']/flt['sigma'] > bestRewardToReturnRatio:
@@ -271,7 +271,7 @@ class Portfolio:
         self.graphFrontier(bestflt['Flt'][0])
         bestflt = bestflt['Flt'][0]
         string = ""
-        for i, name in zip(bestflt, assets):
+        for i, name in zip(bestflt, self.stocks):
             allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
             string += "{}: {}".format(name,allocation_string) + '\n'
 
