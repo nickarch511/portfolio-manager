@@ -255,6 +255,7 @@ class Portfolio:
         bestNames = None
         bestRewardToReturnRatio = 0
 
+        self.num_stocks = numAssets
         for _ in range(100):
             self.stocks = random.sample(x,numAssets)
             flt,names = self.getLongPortfolioGivenAssetStringAndRf(self.stocks, self.get_si_rate(), 1)
@@ -265,7 +266,16 @@ class Portfolio:
         print(bestflt)
         print(bestNames)
         self.stocks = bestNames
-        return bestflt
+
+        # Graph the frontier
+        self.graphFrontier(bestflt)
+
+        string = ""
+        for i, name in zip(bestflt, assets):
+            allocation_string = '-$' + str(-1*round(i*self.amount, 2)) if i < 0 else '$' + str(round(i*self.amount, 2))
+            string += "{}: {}".format(name,allocation_string) + '\n'
+
+        return string
 
     # Add string method
     def __str__(self):
