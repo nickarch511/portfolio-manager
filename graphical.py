@@ -160,11 +160,12 @@ class Gui(QWidget):
         try: numAssets = int(self.assetNumInputLabel.text())
         except: return
         if not self.portfolio: self.portfolio = Portfolio([])
-        self.portfolio.pickLongPortfolio(numAssets)
+        result = self.portfolio.pickLongPortfolio(numAssets)
         self.assetListLbl.setText(str(self.portfolio))
 
         # Edit label to reflect number of stocks
         self.numAssetsLbl.setText(str(self.portfolio.num_stocks) + " Total Assets")
+        self.output.document().setPlainText(str(result))
 
 def main():
     app = QApplication(sys.argv)
