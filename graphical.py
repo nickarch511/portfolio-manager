@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QLabel, QPushButton, QLineEdit, QRadioButton
+from PyQt5.QtWidgets import QLabel, QPushButton, QLineEdit, QRadioButton, QGroupBox
 from PyQt5.QtWidgets import QWidget, QDesktopWidget, QHBoxLayout, QVBoxLayout, QPlainTextEdit
 from PyQt5.QtGui import QPixmap, QFont
 from portfolioQuery import Portfolio
@@ -55,6 +55,17 @@ class Gui(QWidget):
         self.assetListLbl.setPlaceholderText("Assets will appear here when added")
         self.assetListLbl.setReadOnly(True) 
 
+        # Make widgets for computer-picked long portfolio
+        self.assetNumInputLabel = QLineEdit() # 
+        self.assetNumInputLabel.setPlaceholderText("Enter number of assets")
+        self.randomBtn = QPushButton("Get computer-selected portfolio")
+        self.randomBtn.clicked.connect(self.randomBtnClicked)
+        self.randomizedPortfolioLayout = QHBoxLayout()
+        self.randomizedPortfolioLayout.addWidget(self.randomBtn)
+        self.randomizedPortfolioLayout.addWidget(self.assetNumInputLabel)
+        self.randomizedGroupBox = QGroupBox("Let the computer pick your assets (takes a while)")
+        self.randomizedGroupBox.setLayout(self.randomizedPortfolioLayout)
+
         self.leftHAmountLayout.addWidget(self.amountLbl)
         self.leftHAmountLayout.addWidget(self.amountInputLbl)
 
@@ -66,6 +77,7 @@ class Gui(QWidget):
         self.leftVertLayout.addWidget(self.unlimitedRadioBtn)
         self.leftVertLayout.addWidget(self.longRadioBtn)
         self.leftVertLayout.addLayout(self.leftHAmountLayout)
+        self.leftVertLayout.addWidget(self.randomizedGroupBox)
         self.leftVertLayout.addStretch(1)
         
         # Make the right side of screen
@@ -139,6 +151,16 @@ class Gui(QWidget):
         if self.portfolio is None:
             self.portfolio = Portfolio(assets)
         else: self.portfolio.add_stocks(assets)
+        self.assetListLbl.setText(str(self.portfolio))
+
+        # Edit label to reflect number of stocks
+        self.numAssetsLbl.setText(str(self.portfolio.num_stocks) + " Total Assets")
+
+    def randomBtnClicked(self):
+        try: numAssets = int(self.assetNumInputLabel.text())
+        except: return
+        if not self.portfolio: self.portfolio = Portfolio([])
+        self.portfolio.pickLongPortfolio(numAssets)
         self.assetListLbl.setText(str(self.portfolio))
 
         # Edit label to reflect number of stocks
